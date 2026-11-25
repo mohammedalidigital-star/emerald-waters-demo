@@ -2,6 +2,13 @@
 <html lang="en-IN">
 <head>
   <meta charset="UTF-8">
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5X2SP5H8');</script>
+  <!-- End Google Tag Manager -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- ===== SEO & CAMPAIGN METADATA ===== -->
@@ -21,14 +28,11 @@
   <meta property="og:image" content="https://YOUR-DOMAIN/images/og-cover.jpg">
   -->
 
-  <!-- ===== PLACEHOLDER: GOOGLE TAG MANAGER (head snippet) =====
-       Paste the official GTM <script> here after the container is created.
-       Do not add a container ID until it is real (format GTM-XXXXXXX).
-  -->
-
-  <!-- ===== PLACEHOLDER: GOOGLE ADS CONVERSION TRACKING (gtag.js) =====
-       Paste the official Google Ads global site tag here once the account and
-       conversion action exist. No ID is included on purpose.
+  <!-- ===== GOOGLE ADS CONVERSION TRACKING =====
+       Configured inside Google Tag Manager (GTM-5X2SP5H8), not here.
+       Trigger the Google Ads conversion tag on the custom event "generate_lead",
+       which this page pushes to the dataLayer only after a confirmed successful submission.
+       Do not add a separate gtag.js snippet here, or tags may fire twice.
   -->
 
   <!-- Prioritise the above-the-fold hero image -->
@@ -458,6 +462,10 @@
       background: var(--green); color: var(--ivory); border-left: 3px solid var(--gold);
     }
     .form-status.is-visible { display: block; }
+    .form-status.is-error { background: #F6E7E4; color: var(--error); border-left-color: var(--error); }
+    .demo-form[aria-busy="true"] .btn { cursor: progress; }
+    .btn .spinner { width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* =========================================================
        7. FOOTER
@@ -577,9 +585,10 @@
 </head>
 
 <body>
-  <!-- ===== PLACEHOLDER: GOOGLE TAG MANAGER (noscript body snippet) =====
-       Paste the official GTM <noscript> iframe here once a real container exists.
-  -->
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5X2SP5H8"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
   <a class="skip-link" href="#main">Skip to content</a>
 
@@ -686,7 +695,7 @@
           <p class="form-intro">Ask for the latest pricing, floor plan or a site visit.</p>
           <div class="demo-notice" role="note">
             <svg aria-hidden="true"><use href="#i-info"/></svg>
-            <span><strong>Demo form.</strong> Information is not transmitted or stored. Live enquiry submission is not currently enabled.</span>
+            <span><strong>Demonstration page.</strong> Please submit dummy details only. Enquiries are sent to a Google Sheet for enquiry handling.</span>
           </div>
           <form class="demo-form" action="#" method="get" novalidate aria-label="Demo enquiry form">
             <div class="field">
@@ -714,8 +723,8 @@
               <p class="field-error" id="h-pref-err">Please choose an enquiry preference.</p>
             </div>
             <button class="btn btn-green btn-block" type="submit" disabled>Request Details (Demo)</button>
-            <p class="privacy">Demonstration only: nothing you enter is sent, stored or used to contact you. See the <a href="#privacy">privacy notice</a>.</p>
-            <noscript><p class="privacy">This demo form needs JavaScript to run its validation preview. It never submits data.</p></noscript>
+            <p class="privacy">Your name, mobile number and enquiry preference are submitted to Google Sheets for enquiry handling. See the <a href="#privacy">privacy notice</a>.</p>
+            <noscript><p class="privacy">Please enable JavaScript to submit this form, or call +91 88570 90799.</p></noscript>
             <div class="form-status" role="status" aria-live="polite"></div>
           </form>
         </div>
@@ -969,15 +978,14 @@
         <div class="enquiry-form-wrap reveal">
           <div class="demo-notice" role="note">
             <svg aria-hidden="true"><use href="#i-info"/></svg>
-            <span><strong>Demonstration form.</strong> Information entered here is not transmitted or stored. Live enquiry submission is not currently enabled.</span>
+            <span><strong>Demonstration page.</strong> Please submit dummy details only. Enquiries are sent to a Google Sheet for enquiry handling.</span>
           </div>
 
           <!--
-            ===== PLACEHOLDER: REAL ENQUIRY FORM INTEGRATION =====
-            When approved, connect this form to a real endpoint (e.g. a CRM or webhook) by:
-              1. adding action/method or a fetch() call in the submit handler below,
-              2. updating the privacy notice with the advertiser's identity and data use,
-              3. showing a genuine success message only after the server confirms receipt.
+            ===== ENQUIRY FORM INTEGRATION =====
+            Both forms POST (URL-encoded) to the Google Apps Script endpoint set in ENQUIRY_ENDPOINT
+            in the script at the bottom of this file. Success is shown only when the endpoint
+            returns JSON with "success": true.
           -->
           <form class="demo-form" id="enquiry-form" action="#" method="get" novalidate aria-label="Demo enquiry form">
             <div class="field">
@@ -1008,10 +1016,10 @@
             </div>
             <button class="btn btn-gold btn-block" type="submit" disabled>Submit Enquiry (Demo)</button>
             <p class="privacy" id="privacy-form">
-              <strong>Privacy notice:</strong> this demonstration does not send, store or share any information you enter,
-              and you will not be contacted as a result of using it. See the full <a href="#privacy">privacy notice</a>.
+              <strong>Privacy notice:</strong> your name, mobile number and enquiry preference are submitted to Google Sheets
+              for enquiry handling. This is a demonstration page, so please use dummy details only. See the full <a href="#privacy">privacy notice</a>.
             </p>
-            <noscript><p class="privacy">This demo form needs JavaScript to run its validation preview. It never submits data.</p></noscript>
+            <noscript><p class="privacy">Please enable JavaScript to submit this form, or call +91 88570 90799.</p></noscript>
             <div class="form-status" role="status" aria-live="polite"></div>
           </form>
         </div>
@@ -1059,7 +1067,7 @@
                Add the verified project MahaRERA registration number(s) and, if applicable,
                the advertiser's MahaRERA agent registration number, exactly as issued. Do not guess. -->
         </p>
-        <p id="privacy"><strong>Privacy notice:</strong> The enquiry forms on this page are for demonstration only. No information entered is sent, stored or shared, and no tracking or conversion events are triggered by form submissions. Before live use, this notice will be updated to explain who collects enquiry data, why, and how it is handled.</p>
+        <p id="privacy"><strong>Privacy notice:</strong> When you submit an enquiry form, your name, mobile number and enquiry preference are sent to a Google Sheet (via Google Apps Script) managed by the independent operator of this page, and are used only to handle your enquiry. This is a demonstration page: please submit dummy details only until live lead collection is approved. This page uses Google Tag Manager to measure visits and successful form submissions for advertising purposes; names and phone numbers are not sent to analytics or advertising tags. To ask for an enquiry to be deleted, call +91 88570 90799.</p>
         <p><strong>Illustrations:</strong> All visuals on this page are illustrative and are not actual project photography.</p>
       </div>
       <p class="footer-bottom">© <span id="year">2026</span> · Independent campaign demonstration page.</p>
@@ -1134,8 +1142,15 @@
       });
     });
 
-    /* ---------- Demo form validation (no data is sent or stored) ---------- */
-    var DEMO_MESSAGE = "Demo completed. Live enquiry submission will be enabled after campaign approval.";
+    /* ---------- Enquiry forms → Google Apps Script → Google Sheets ---------- */
+    var ENQUIRY_ENDPOINT = "https://script.google.com/macros/s/AKfycbxZn2o8xJlcDcNLEK7m6NnuiDw5N_iIiQ_cXwT7NncuSqTS2evkp_2EYJODGJWbYCpo/exec";
+    var PROPERTY_PREFERENCE = "3 BHK";
+    var REQUEST_TIMEOUT_MS = 25000;
+    var MSG_SUCCESS = "Thank you. Your enquiry has been submitted successfully. Our team will contact you on the number provided.";
+    var MSG_FAILED = "Sorry, we couldn't submit your enquiry. Please check your connection and try again, or call +91 88570 90799.";
+    var MSG_UNCERTAIN = "We couldn't confirm your enquiry (the request timed out). To avoid a duplicate, please call +91 88570 90799 rather than submitting again.";
+
+    window.dataLayer = window.dataLayer || [];
 
     function setError(input, hasError) {
       var field = input.closest(".field");
@@ -1145,8 +1160,10 @@
     function validate(form) {
       var name = form.querySelector('[data-field="name"]'), mobile = form.querySelector('[data-field="mobile"]'), pref = form.querySelector('[data-field="preference"]');
       var mobileVal = mobile.value.replace(/\D/g, "");
+      var nameVal = name.value.trim();
       var checks = [
-        [name, name.value.trim().length >= 2 && /[A-Za-zऀ-ॿ]/.test(name.value)],
+        /* Letters (incl. Devanagari), spaces, dots, apostrophes and hyphens only; must start with a letter */
+        [name, nameVal.length >= 2 && nameVal.length <= 80 && /^[A-Za-zऀ-ॿ][A-Za-zऀ-ॿ .'\-]*$/.test(nameVal)],
         [mobile, /^[6-9]\d{9}$/.test(mobileVal)],
         [pref, pref.value !== ""]
       ];
@@ -1157,11 +1174,22 @@
       });
       return firstInvalid;
     }
+    function showStatus(status, text, isError) {
+      status.textContent = text;
+      status.classList.toggle("is-error", !!isError);
+      status.setAttribute("role", isError ? "alert" : "status");
+      status.classList.add("is-visible");
+    }
 
     document.querySelectorAll(".demo-form").forEach(function (form) {
       var status = form.querySelector(".form-status");
+      var button = form.querySelector('button[type="submit"]');
+      var buttonHTML = button.innerHTML;
+      var formLocation = form.id === "enquiry-form" ? "enquiry_section" : "hero";
+      var inFlight = false;
+
       /* Submit buttons are disabled in HTML so nothing can be submitted without JS. */
-      form.querySelector('button[type="submit"]').disabled = false;
+      button.disabled = false;
       form.querySelector('[data-field="mobile"]').addEventListener("input", function () {
         this.value = this.value.replace(/\D/g, "").slice(0, 10);
       });
@@ -1171,20 +1199,69 @@
           if (el.closest(".field").classList.contains("has-error")) validate(form);
         });
       });
+
+      function setBusy(busy) {
+        inFlight = busy;
+        button.disabled = busy;
+        form.setAttribute("aria-busy", String(busy));
+        button.innerHTML = busy ? '<span class="spinner" aria-hidden="true"></span>Submitting…' : buttonHTML;
+      }
+
       form.addEventListener("submit", function (e) {
         e.preventDefault();
+        if (inFlight) return; /* prevent duplicate submissions */
         status.classList.remove("is-visible");
         var invalid = validate(form);
         if (invalid) { invalid.focus(); return; }
 
-        /* PLACEHOLDER: real submission goes here after approval (fetch to CRM/webhook).
-           PLACEHOLDER: fire Google Ads conversion ONLY after a real, confirmed submission.
-           Intentionally no conversion events are fired for demo submissions. */
+        var enquiryType = form.querySelector('[data-field="preference"]').value;
+        var body = new URLSearchParams();
+        body.append("name", form.querySelector('[data-field="name"]').value.trim());
+        body.append("phone", "+91 " + form.querySelector('[data-field="mobile"]').value.replace(/\D/g, ""));
+        body.append("email", ""); /* no email field on this page */
+        body.append("preference", PROPERTY_PREFERENCE + " - " + enquiryType);
 
-        form.reset();
-        form.querySelectorAll("[aria-invalid]").forEach(function (el) { el.removeAttribute("aria-invalid"); });
-        status.textContent = DEMO_MESSAGE;
-        status.classList.add("is-visible");
+        setBusy(true);
+        var controller = "AbortController" in window ? new AbortController() : null;
+        var timer = setTimeout(function () { if (controller) controller.abort(); }, REQUEST_TIMEOUT_MS);
+
+        /* A URLSearchParams body is sent as application/x-www-form-urlencoded with no custom headers,
+           so it is a CORS "simple request" (no preflight). fetch follows the Apps Script 302 redirect
+           to script.googleusercontent.com, which returns readable JSON. Normal CORS mode (not no-cors),
+           so success is confirmed from the actual response body. */
+        fetch(ENQUIRY_ENDPOINT, {
+          method: "POST",
+          body: body,
+          redirect: "follow",
+          credentials: "omit",
+          cache: "no-store",
+          signal: controller ? controller.signal : undefined
+        })
+          .then(function (res) {
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            return res.text();
+          })
+          .then(function (text) {
+            var data;
+            try { data = JSON.parse(text); } catch (err) { throw new Error("Response was not JSON"); }
+            if (!data || data.success !== true) throw new Error((data && data.message) || "Submission rejected");
+
+            /* Confirmed success only */
+            form.reset();
+            form.querySelectorAll("[aria-invalid]").forEach(function (el) { el.removeAttribute("aria-invalid"); });
+            showStatus(status, MSG_SUCCESS, false);
+            /* Conversion event: no names, phone numbers or emails */
+            window.dataLayer.push({ event: "generate_lead", form_location: formLocation, enquiry_type: enquiryType, property_preference: PROPERTY_PREFERENCE });
+          })
+          .catch(function (err) {
+            var timedOut = err && err.name === "AbortError";
+            showStatus(status, timedOut ? MSG_UNCERTAIN : MSG_FAILED, true);
+            if (window.console) console.warn("Enquiry submission failed:", err && err.message);
+          })
+          .then(function () {
+            clearTimeout(timer);
+            setBusy(false);
+          });
       });
     });
 
