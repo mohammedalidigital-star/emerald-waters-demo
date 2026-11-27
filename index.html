@@ -1237,6 +1237,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             var data;
             try { data = JSON.parse(text); } catch (err) { throw new Error("Response was not JSON"); }
             if (!data || data.success !== true) throw new Error((data && data.message) || "Submission rejected");
+            // GTM - Successful Lead Conversion
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({
+    event: 'lead_form_success'
+});
 
             /* Confirmed success only */
             form.reset();
